@@ -13,35 +13,78 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
+    private final String FOLDER_PATH = "D:/Desktop/pspk2/teachers/";
     private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
-    /*public void addSubject(MultipartFile file, String token) throws IOException {
-        Subject subject = new Subject();
-        subject.setName(subjectRequest.getName());
 
-        if(file != null){
-            String filename = StringUtils.cleanPath(subjectRequest.getFile().getOriginalFilename());
-            subject.setFilename(filename);
-            subject.setType(subjectRequest.getFile().getContentType());
-            subject.setData(subjectRequest.getFile().getBytes());
-        }
 
-        return subjectRepository.save(subject);
-    }*/
-
-    public Teacher uploadPic(MultipartFile file, String email) throws IOException{
+    public String updateTeacherImage(String email, MultipartFile file) throws IOException {
         User user  = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         Teacher teacher = teacherRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalStateException("no such teacher with userid "+ user.getId()));
 
+        if(file!=null){
+            if(teacher.getFilename()!=null){
+
+                String filename = teacher.getFilename();
+                Path saveTO = Paths.get(FOLDER_PATH + filename);
+                Files.delete(saveTO);
+                Files.copy(file.getInputStream(), saveTO);
+            }
+            if(teacher.getFilename()==null){
+                String filename = UUID.randomUUID().toString() + ".jpg";
+                Path saveTO = Paths.get(FOLDER_PATH + filename);
+
+                teacher.setFilename(filename);
+                // savedData =  subjectRepository.save(subjectToSave);
+                Files.copy(file.getInputStream(), saveTO);
+            }
+        }
+
+        Teacher savedTeacher = teacherRepository.save(teacher);
+        if(savedTeacher!=null) return "teacher pic : "+savedTeacher.getFilename()+" updated successfully";
+        return null;
+
+    }
+
+    public  String deleteTeacherImage(String email) throws IOException {
+        User user  = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("no such user"));
+        Teacher teacher = teacherRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalStateException("no such teacher with userid "+ user.getId()));
+
+        if(teacher.getFilename()!=null){
+            Path saveTO = Paths.get(FOLDER_PATH + teacher.getFilename());
+            Files.delete(saveTO);
+            teacher.setFilename(null);
+        }
+
+        Teacher savedTeacher = teacherRepository.save(teacher);
+        if(savedTeacher!=null) return "teacher pic deleted successfully";
+        return null;
+    }
+    /*public Teacher uploadPic(MultipartFile file, String email) throws IOException{
+
+        User user  = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("no such user"));
+        System.out.println(user);
+        Teacher teacher = teacherRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalStateException("no such teacher with userid "+ user.getId()));
+        System.out.println(teacher);
         if(file != null){
             String filename = StringUtils.cleanPath(file.getOriginalFilename());
             teacher.setFilename(filename);
@@ -50,16 +93,19 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         return teacherRepository.save(teacher);
+    }*/
+
+
+    public List<Teacher> findTeachersBySubjectId(Long subjectId){
+        return teacherRepository.findBySubjectId(subjectId);
     }
 
-    @Transactional
-    public Stream<Teacher> findBySubjectId(Long subjectId){
-        return teacherRepository.findBySubjectId(subjectId).stream();
-    }
+    public  byte[] getTeacherImage(String filename) throws IOException {
+        Optional<Teacher> im = teacherRepository.findTeacherByFileName(filename);
 
-    public Teacher getTeacherById(Long id){
-        return teacherRepository.findById(id).get();
-    }
+        return Files.readAllBytes(
+                new File( FOLDER_PATH + im.get().getFilename()).toPath());
 
+    }
 
 }

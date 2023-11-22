@@ -21,12 +21,7 @@ public class TeacherController {
     private final JWTService jwtService;
     private final TeacherService teacherService;
 
-    @GetMapping
-    public ResponseEntity<String> helloTeacher() {
-        return ResponseEntity.ok("hello teacher");
-    }
-
-    @PostMapping("pic")
+    /*@PostMapping("pic")
     public ResponseEntity<ResponseMessage> uploadPic(
             @RequestHeader("Authorization") String bearerToken,
             @RequestParam("file") MultipartFile file
@@ -43,9 +38,41 @@ public class TeacherController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
         }
 
+    }*/
+
+    @PutMapping("/pic")
+    public ResponseEntity<ResponseMessage> updateTeacherPic(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestHeader("Authorization") String bearerToken
+    ){
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        String message = "";
+        try {
+            message = teacherService.updateTeacherImage(email,file);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+        } catch (Exception e) {
+            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+        }
     }
 
-    @GetMapping("/greeting")
+    @DeleteMapping("/pic")
+    public ResponseEntity<ResponseMessage> updateTeacherPic(
+            @RequestHeader("Authorization") String bearerToken
+    ){
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        String message = "";
+        try {
+            message = teacherService.deleteTeacherImage(email);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+        } catch (Exception e) {
+            message = "Could not delete pic !";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+        }
+    }
+
+
+    @GetMapping("")
     public ResponseEntity<String> greeting(
             @RequestHeader("Authorization") String bearerToken) {
         // code that uses the language variable

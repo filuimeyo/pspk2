@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
@@ -19,5 +20,11 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             " left JOIN s.teachers t " +
             " group by s order by COALESCE(COUNT(t), 0) DESC ")
     List<Subject> findMostPopularSubjects(PageRequest pageRequest); //для главной
+
+    @Query("SELECT s FROM Subject s WHERE s.name = ?1")
+    Optional<Subject> findSubjectByName(String name);
+
+    @Query("SELECT s FROM Subject s WHERE s.filename = ?1")
+    Optional<Subject> findSubjectByFileName(String filename);
 
 }

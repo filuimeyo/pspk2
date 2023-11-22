@@ -1,5 +1,6 @@
 package com.nikak.pspkurssecurity.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -23,14 +24,7 @@ public class Teacher {
     private String info;
     private double lessonPrice;
 
-
-
-
     private String filename;
-    private String type;
-
-    @Lob
-    private byte[] data;
 
     @Transient
     private Double finalRating;
@@ -49,21 +43,23 @@ public class Teacher {
             joinColumns =  @JoinColumn(name = "teacher_id") ,
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    @JsonManagedReference
+    @JsonBackReference
     private Set<Subject> teacherSubjects = new HashSet<>();
 
 
-    /*public void setFinalRating() {
-        this.finalRating = (double) teacherRating.size();
-                *//*.stream().map(Rating::getRating).map(Double::valueOf)
-                .reduce(Double::sum).map(it->it/teacherRating.size())
-                .orElse(0.0);*//*
+    public void setFinalRating() {
+        this.finalRating = 0.0;
+//                (double) teacherRating.size();
+//                .stream().map(Rating::getRating).map(Double::valueOf)
+//                .reduce(Double::sum).map(it->it/teacherRating.size())
+//                .orElse(0.0);
     }
 
 
     public Double getFinalRating() {
-        return  teacherRating.stream().map(Rating::getRating).map(Double::valueOf)
+        return  0.0;/*teacherRating.stream().map(Rating::getRating).map(Double::valueOf)
                 .reduce(Double::sum).map(it->it/teacherRating.size())
-                .orElse(0.0);
-    }*/
+                .orElse(0.0);*/
+    }
+
 }

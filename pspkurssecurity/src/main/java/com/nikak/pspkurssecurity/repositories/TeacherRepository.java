@@ -1,5 +1,6 @@
 package com.nikak.pspkurssecurity.repositories;
 
+import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.entities.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,9 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
             " where subject_id = ?1",
     nativeQuery = true*/
 
-    @Query("SELECT s.teachers  from Subject s where s.id = ?1")
+    @Query("SELECT t from Teacher t inner join t.teacherSubjects s where s.id = ?1")
     List<Teacher> findBySubjectId(Long subjectId);
+
+    @Query("SELECT t FROM Teacher t WHERE t.filename = ?1")
+    Optional<Teacher> findTeacherByFileName(String filename);
 }

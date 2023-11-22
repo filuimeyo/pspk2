@@ -17,10 +17,6 @@ public class Subject {
 
     private String filename;
 
-    private String type;
-
-    @Lob
-    private byte[] data;
 
     @ManyToMany(mappedBy = "teacherSubjects")
     @JsonBackReference

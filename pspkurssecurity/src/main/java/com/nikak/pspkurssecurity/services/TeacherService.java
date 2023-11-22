@@ -10,8 +10,15 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface TeacherService {
-    Teacher uploadPic(MultipartFile file, String email) throws IOException;
-    Stream<Teacher> findBySubjectId(Long subjectId);
+   /* Teacher uploadPic(MultipartFile file, String email) throws IOException;
 
-    Teacher getTeacherById(Long id);
+
+    Teacher getTeacherById(Long id);*/
+   List<Teacher> findTeachersBySubjectId(Long subjectId);
+
+    byte[] getTeacherImage(String filename) throws IOException;
+
+    String updateTeacherImage(String email, MultipartFile file) throws IOException;
+
+    String deleteTeacherImage(String email) throws IOException;
 }
