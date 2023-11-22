@@ -1,6 +1,7 @@
 package com.nikak.pspkurssecurity.services;
 
 import com.nikak.pspkurssecurity.dto.SubjectRequest;
+import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.entities.Teacher;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,4 +22,6 @@ public interface TeacherService {
     String updateTeacherImage(String email, MultipartFile file) throws IOException;
 
     String deleteTeacherImage(String email) throws IOException;
+
+    Teacher updateTeacherProfile(TeacherProfileRequest teacherProfileRequest, String email);
 }

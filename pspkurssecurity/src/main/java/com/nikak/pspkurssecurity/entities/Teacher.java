@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -43,8 +42,8 @@ public class Teacher {
             joinColumns =  @JoinColumn(name = "teacher_id") ,
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    @JsonBackReference
-    private Set<Subject> teacherSubjects = new HashSet<>();
+    @JsonManagedReference
+    private List<Subject> teacherSubjects = new ArrayList<>();
 
 
     public void setFinalRating() {
@@ -62,4 +61,30 @@ public class Teacher {
                 .orElse(0.0);*/
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Teacher teacher = (Teacher) o;
+        return Double.compare(lessonPrice, teacher.lessonPrice) == 0 && Objects.equals(id, teacher.id) && Objects.equals(name, teacher.name) && Objects.equals(info, teacher.info) && Objects.equals(filename, teacher.filename) && Objects.equals(finalRating, teacher.finalRating) && Objects.equals(user, teacher.user) && Objects.equals(teacherSubjects, teacher.teacherSubjects);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, info, lessonPrice, filename, finalRating, user, teacherSubjects);
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", info='" + info + '\'' +
+                ", lessonPrice=" + lessonPrice +
+                ", filename='" + filename + '\'' +
+                ", finalRating=" + finalRating +
+                ", teacherSubjects=" + teacherSubjects +
+                '}';
+    }
 }
