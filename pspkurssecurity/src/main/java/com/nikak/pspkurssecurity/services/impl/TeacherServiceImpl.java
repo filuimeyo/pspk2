@@ -80,18 +80,19 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacherProfileRequest.getLessonPrice() != null) {
             teacher.setLessonPrice(teacherProfileRequest.getLessonPrice());
         }
-        if (teacherProfileRequest.getSubjectsIds() != null) {
-            List<Subject> subjects = new ArrayList<>();
+       /* if (teacherProfileRequest.getSubjectsIds() != null) {
+            List<Subject> subjects = teacher.getTeacherSubjects();
             for (Long id : teacherProfileRequest.getSubjectsIds()) {
-                System.out.println("sub");
+
                 Optional<Subject> subject = subjectRepository.findById(id);
                 if(subject.isPresent()) {
-                    subjects.add(subject.get());
-
+                    if(!subjects.contains(subject.get())){
+                        subjects.add(subject.get());
+                    }
                 }
             }
             teacher.setTeacherSubjects(subjects);
-        }
+        }*/
         return teacherRepository.save(teacher);
 
     }

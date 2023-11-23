@@ -11,5 +11,4 @@ public class TeacherProfileRequest {
     private String name;
     private String info;
     private Double lessonPrice;
-    private Set<Long> subjectsIds;
 }

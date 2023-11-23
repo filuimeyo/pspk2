@@ -72,7 +72,7 @@ public class TeacherController {
     }
 
     @DeleteMapping("/pic")
-    public ResponseEntity<ResponseMessage> updateTeacherPic(
+    public ResponseEntity<ResponseMessage> deleteTeacherPic(
             @RequestHeader("Authorization") String bearerToken
     ) {
         String email = jwtService.extractUserName(bearerToken.substring(7));
