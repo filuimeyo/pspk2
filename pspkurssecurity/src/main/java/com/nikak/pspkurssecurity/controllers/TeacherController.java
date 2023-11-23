@@ -5,6 +5,7 @@ import com.nikak.pspkurssecurity.dto.SignUpRequest;
 import com.nikak.pspkurssecurity.dto.SubjectRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.Teacher;
+import com.nikak.pspkurssecurity.entities.TeacherApplication;
 import com.nikak.pspkurssecurity.services.JWTService;
 import com.nikak.pspkurssecurity.services.TeacherService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/teacher")
@@ -94,5 +97,20 @@ public class TeacherController {
         String username = jwtService.extractUserName(bearerToken.substring(7));
         return new ResponseEntity<String>(username, HttpStatus.OK);
     }
+
+    @GetMapping("/teacherapplications")
+    public ResponseEntity<List<TeacherApplication>> getTeacherApplications(
+            @RequestHeader("Authorization") String bearerToken
+    ){
+        // code that uses the language variable
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        return ResponseEntity.status(HttpStatus.OK).body(
+               teacherService.getTeacherApplications(email)
+        );
+    }
+
+
+
+
 }
 

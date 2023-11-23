@@ -4,8 +4,10 @@ import com.nikak.pspkurssecurity.dto.SubjectRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.entities.Teacher;
+import com.nikak.pspkurssecurity.entities.TeacherApplication;
 import com.nikak.pspkurssecurity.entities.User;
 import com.nikak.pspkurssecurity.repositories.SubjectRepository;
+import com.nikak.pspkurssecurity.repositories.TeacherApplicationRepository;
 import com.nikak.pspkurssecurity.repositories.TeacherRepository;
 import com.nikak.pspkurssecurity.repositories.UserRepository;
 import com.nikak.pspkurssecurity.services.TeacherService;
@@ -29,7 +31,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final String FOLDER_PATH = "D:/Desktop/pspk2/teachers/";
     private final TeacherRepository teacherRepository;
     private final UserRepository userRepository;
-
+    private final TeacherApplicationRepository teacherApplicationRepository;
     private final SubjectRepository subjectRepository;
 
 
@@ -144,4 +146,11 @@ public class TeacherServiceImpl implements TeacherService {
 
     }
 
+    public List<TeacherApplication> getTeacherApplications(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("no such user"));
+        Teacher teacher = teacherRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
+        return teacherApplicationRepository.findByTeacherId(teacher.getId());
+    }
 }

@@ -30,10 +30,12 @@ public class Teacher {
     @JsonManagedReference
     private Set<Rating> teacherRating;
 
+    @OneToMany(mappedBy="teacher")
+    @JsonBackReference
+    private Set<TeacherApplication> teacherApplications;
+
     @Transient
     private Double finalRating;
-
-
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
@@ -61,6 +63,19 @@ public class Teacher {
         this.lessonPrice = lessonPrice;
         this.filename = filename;
         this.teacherRating = teacherRating;
+        this.finalRating = finalRating;
+        this.user = user;
+        this.teacherSubjects = teacherSubjects;
+    }
+
+    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, List<Subject> teacherSubjects) {
+        this.id = id;
+        this.name = name;
+        this.info = info;
+        this.lessonPrice = lessonPrice;
+        this.filename = filename;
+        this.teacherRating = teacherRating;
+        this.teacherApplications = teacherApplications;
         this.finalRating = finalRating;
         this.user = user;
         this.teacherSubjects = teacherSubjects;
@@ -141,6 +156,17 @@ public class Teacher {
                 .orElse(0.0);
     }
 
+    public Set<TeacherApplication> getTeacherApplications() {
+        return teacherApplications;
+    }
+
+    public void setTeacherApplications(Set<TeacherApplication> teacherApplications) {
+        this.teacherApplications = teacherApplications;
+    }
+
+    public void setFinalRating(Double finalRating) {
+        this.finalRating = finalRating;
+    }
 
     @Override
     public boolean equals(Object o) {

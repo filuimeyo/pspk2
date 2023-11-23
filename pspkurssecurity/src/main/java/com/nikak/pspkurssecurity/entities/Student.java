@@ -1,5 +1,6 @@
 package com.nikak.pspkurssecurity.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,6 +23,10 @@ public class Student {
     @JsonIgnore
     private Set<Rating> teacherRating;
 
+    @OneToMany(mappedBy="student")
+    @JsonBackReference
+    private Set<TeacherApplication> teacherApplications;
+
     public Student() {
     }
 
@@ -31,6 +36,14 @@ public class Student {
         this.name = name;
         this.user = user;
         this.teacherRating = teacherRating;
+    }
+
+    public Set<TeacherApplication> getTeacherApplications() {
+        return teacherApplications;
+    }
+
+    public void setTeacherApplications(Set<TeacherApplication> teacherApplications) {
+        this.teacherApplications = teacherApplications;
     }
 
     public Long getId() {

@@ -1,8 +1,10 @@
 package com.nikak.pspkurssecurity.controllers;
 
+import com.nikak.pspkurssecurity.dto.ApplyForTeacherRequest;
 import com.nikak.pspkurssecurity.dto.RatingRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.Rating;
+import com.nikak.pspkurssecurity.entities.TeacherApplication;
 import com.nikak.pspkurssecurity.services.JWTService;
 import com.nikak.pspkurssecurity.services.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -80,5 +82,34 @@ public class StudentController {
             );
         }
 
+    }
+
+    @GetMapping("/applyforteacher")
+    public ResponseEntity<List<TeacherApplication>> getTeacherApplications(
+            @RequestHeader("Authorization") String bearerToken
+    ) {
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                studentService.getTeacherApplications(email)
+        );
+    }
+
+
+    @PostMapping("/applyforteacher")
+    public ResponseEntity<String> applyForTeacher(
+            @RequestHeader("Authorization") String bearerToken,
+            @RequestBody ApplyForTeacherRequest applyForTeacherRequest
+    ) {
+        try {
+            String email = jwtService.extractUserName(bearerToken.substring(7));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    studentService.applyForTeacher(applyForTeacherRequest, email)
+            );
+
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    e.getMessage()
+            );
+        }
     }
 }

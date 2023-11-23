@@ -24,6 +24,10 @@ public class Subject {
     @JsonBackReference
     private Set<Teacher> teachers = new HashSet<>();
 
+    @OneToMany(mappedBy="subject")
+    @JsonBackReference
+    private Set<TeacherApplication> teacherApplications;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
