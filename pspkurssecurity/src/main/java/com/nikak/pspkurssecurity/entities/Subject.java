@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
-@Data
+
 @Entity
 public class Subject {
     @Id
@@ -22,11 +20,61 @@ public class Subject {
 
     @ManyToMany(mappedBy = "teacherSubjects")
     @JsonBackReference
-    private Set<Teacher> teachers = new HashSet<>();
+    private List<Teacher> teachers = new ArrayList<>();
 
     @OneToMany(mappedBy="subject")
     @JsonBackReference
     private Set<TeacherApplication> teacherApplications;
+
+    public Subject() {
+    }
+
+    public Subject(Long id, String name, String filename, Set<TeacherApplication> teacherApplications) {
+        this.id = id;
+        this.name = name;
+        this.filename = filename;
+        this.teacherApplications = teacherApplications;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public List<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(List<Teacher> teachers) {
+        this.teachers = teachers;
+    }
+
+    public Set<TeacherApplication> getTeacherApplications() {
+        return teacherApplications;
+    }
+
+    public void setTeacherApplications(Set<TeacherApplication> teacherApplications) {
+        this.teacherApplications = teacherApplications;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -47,6 +95,8 @@ public class Subject {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", filename='" + filename + '\'' +
+                ", teachers=" + teachers +
+                ", teacherApplications=" + teacherApplications +
                 '}';
     }
 }

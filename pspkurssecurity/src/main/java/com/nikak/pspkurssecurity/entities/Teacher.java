@@ -50,25 +50,25 @@ public class Teacher {
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     @JsonManagedReference
-    private List<Subject> teacherSubjects = new ArrayList<>();
+    private Set<Subject> teacherSubjects = new HashSet<>();
 
 
     public Teacher() {
     }
 
-    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Double finalRating, User user, List<Subject> teacherSubjects) {
-        this.id = id;
+    public Teacher(String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects) {
         this.name = name;
         this.info = info;
         this.lessonPrice = lessonPrice;
         this.filename = filename;
         this.teacherRating = teacherRating;
+        this.teacherApplications = teacherApplications;
         this.finalRating = finalRating;
         this.user = user;
         this.teacherSubjects = teacherSubjects;
     }
 
-    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, List<Subject> teacherSubjects) {
+    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects) {
         this.id = id;
         this.name = name;
         this.info = info;
@@ -78,6 +78,17 @@ public class Teacher {
         this.teacherApplications = teacherApplications;
         this.finalRating = finalRating;
         this.user = user;
+        this.teacherSubjects = teacherSubjects;
+    }
+
+    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Double finalRating, Set<Subject> teacherSubjects) {
+        this.id = id;
+        this.name = name;
+        this.info = info;
+        this.lessonPrice = lessonPrice;
+        this.filename = filename;
+        this.teacherRating = teacherRating;
+        this.finalRating = finalRating;
         this.teacherSubjects = teacherSubjects;
     }
 
@@ -137,11 +148,11 @@ public class Teacher {
         this.user = user;
     }
 
-    public List<Subject> getTeacherSubjects() {
+    public Set<Subject> getTeacherSubjects() {
         return teacherSubjects;
     }
 
-    public void setTeacherSubjects(List<Subject> teacherSubjects) {
+    public void setTeacherSubjects(Set<Subject> teacherSubjects) {
         this.teacherSubjects = teacherSubjects;
     }
 

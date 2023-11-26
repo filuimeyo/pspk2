@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api/v1/teacher")
@@ -64,7 +65,7 @@ public class TeacherController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<Teacher> updateTeacherPic(
+    public ResponseEntity<Teacher> updateTeacherProfile(
             @RequestBody TeacherProfileRequest teacherProfileRequest,
             @RequestHeader("Authorization") String bearerToken
     ) {
@@ -72,6 +73,20 @@ public class TeacherController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 teacherService.updateTeacherProfile(teacherProfileRequest, email)
         );
+    }
+
+    @PutMapping("/subjects")
+    public ResponseEntity<String> assignSubjectForTeacher(
+            @RequestBody Set<Long> subjectIds,
+            @RequestHeader("Authorization") String bearerToken
+    ) {
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        try {
+            //message = teacherService.assignSubjects(subjectIds,email);
+            return ResponseEntity.status(HttpStatus.OK).body(subjectIds.toString() + " "+ email);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("m");
+        }
     }
 
     @DeleteMapping("/pic")
@@ -108,6 +123,7 @@ public class TeacherController {
                teacherService.getTeacherApplications(email)
         );
     }
+
 
 
 
