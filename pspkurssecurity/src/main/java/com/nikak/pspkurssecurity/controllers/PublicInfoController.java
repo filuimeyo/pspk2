@@ -100,6 +100,18 @@ public class PublicInfoController {
     }
 
 
+    ///certificate
+    @GetMapping("/teachers/certificate/{filename}")
+    public ResponseEntity<?> getTeacherCertificate(
+            @PathVariable String filename
+    ) throws IOException {
+        byte[] im = teacherService.getCertificateImage(filename);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(im);
+    }
+
     /*@GetMapping("teachers/{subjectId}")
     public ResponseEntity<List<TeacherResponse>> getListSubjects(
             @PathVariable Long subjectId

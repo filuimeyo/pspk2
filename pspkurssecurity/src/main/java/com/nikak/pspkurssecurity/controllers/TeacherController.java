@@ -29,24 +29,7 @@ public class TeacherController {
     private final JWTService jwtService;
     private final TeacherService teacherService;
 
-    /*@PostMapping("pic")
-    public ResponseEntity<ResponseMessage> uploadPic(
-            @RequestHeader("Authorization") String bearerToken,
-            @RequestParam("file") MultipartFile file
-    ) {
-        String email = jwtService.extractUserName(bearerToken.substring(7));
-        String message = "";
-        try {
-            teacherService.uploadPic(file, email);
 
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-        }
-
-    }*/
 
     @PutMapping("/pic")
     public ResponseEntity<ResponseMessage> updateTeacherPic(
@@ -82,12 +65,56 @@ public class TeacherController {
     ) {
         String email = jwtService.extractUserName(bearerToken.substring(7));
         try {
-            //message = teacherService.assignSubjects(subjectIds,email);
-            return ResponseEntity.status(HttpStatus.OK).body(subjectIds.toString() + " "+ email);
+            String message = teacherService.assignSubjects(subjectIds,email);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("m");
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
+
+    @DeleteMapping("/subjects")
+    public ResponseEntity<String> deleteSubjectForTeacher(
+            @RequestBody Set<Long> subjectIds,
+            @RequestHeader("Authorization") String bearerToken
+    ) {
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        try {
+            String message = teacherService.removeSubjects(subjectIds,email);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/purposes")
+    public ResponseEntity<String> assignPurposeForTeacher(
+            @RequestBody Set<Long> purposesIds,
+            @RequestHeader("Authorization") String bearerToken
+    ) {
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        try {
+            String message = teacherService.assignPurposes(purposesIds,email);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/purposes")
+    public ResponseEntity<String> deletePurposesForTeacher(
+            @RequestBody Set<Long> purposesIds,
+            @RequestHeader("Authorization") String bearerToken
+    ) {
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        try {
+            String message = teacherService.removePurposes(purposesIds,email);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+    }
+
 
     @DeleteMapping("/pic")
     public ResponseEntity<ResponseMessage> deleteTeacherPic(
@@ -125,6 +152,38 @@ public class TeacherController {
     }
 
 
+
+
+    @PostMapping("/certificate")
+    public ResponseEntity<String> addCertificate(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestHeader("Authorization") String bearerToken
+    ){
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        String message = "";
+        try {
+            message = teacherService.addCertificate(email, file);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        } catch (Exception e) {
+            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+        }
+    }
+
+    @DeleteMapping("/certificate")
+    public ResponseEntity<String> deleteCertificate(
+            @RequestBody Long certificateId,
+            @RequestHeader("Authorization") String bearerToken
+    ){
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        String message = "";
+        try {
+            message = teacherService.deleteCertificate(email, certificateId);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+    }
 
 
 

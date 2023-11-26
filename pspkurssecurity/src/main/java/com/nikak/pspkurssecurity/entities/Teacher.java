@@ -53,6 +53,20 @@ public class Teacher {
     private Set<Subject> teacherSubjects = new HashSet<>();
 
 
+
+    @OneToMany(mappedBy="teacher")
+    @JsonManagedReference
+    private Set<Certificate> certificates;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "teacher_purpose",
+            joinColumns =  @JoinColumn(name = "teacher_id") ,
+            inverseJoinColumns = @JoinColumn(name = "purpose_id")
+    )
+    @JsonManagedReference
+    private Set<Purpose> purposes = new HashSet<>();
+
     public Teacher() {
     }
 
@@ -68,7 +82,7 @@ public class Teacher {
         this.teacherSubjects = teacherSubjects;
     }
 
-    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects) {
+    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects, Set<Certificate> certificates) {
         this.id = id;
         this.name = name;
         this.info = info;
@@ -79,17 +93,22 @@ public class Teacher {
         this.finalRating = finalRating;
         this.user = user;
         this.teacherSubjects = teacherSubjects;
+        this.certificates = certificates;
     }
 
-    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Double finalRating, Set<Subject> teacherSubjects) {
+    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects, Set<Certificate> certificates, Set<Purpose> purposes) {
         this.id = id;
         this.name = name;
         this.info = info;
         this.lessonPrice = lessonPrice;
         this.filename = filename;
         this.teacherRating = teacherRating;
+        this.teacherApplications = teacherApplications;
         this.finalRating = finalRating;
+        this.user = user;
         this.teacherSubjects = teacherSubjects;
+        this.certificates = certificates;
+        this.purposes = purposes;
     }
 
     public Long getId() {
@@ -179,6 +198,23 @@ public class Teacher {
         this.finalRating = finalRating;
     }
 
+
+    public Set<Certificate> getCertificates() {
+        return certificates;
+    }
+
+    public void setCertificates(Set<Certificate> certificates) {
+        this.certificates = certificates;
+    }
+
+    public Set<Purpose> getPurposes() {
+        return purposes;
+    }
+
+    public void setPurposes(Set<Purpose> purposes) {
+        this.purposes = purposes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -200,8 +236,13 @@ public class Teacher {
                 ", info='" + info + '\'' +
                 ", lessonPrice=" + lessonPrice +
                 ", filename='" + filename + '\'' +
+                ", teacherRating=" + teacherRating +
+                ", teacherApplications=" + teacherApplications +
                 ", finalRating=" + finalRating +
+                ", user=" + user +
                 ", teacherSubjects=" + teacherSubjects +
+                ", certificates=" + certificates +
+                ", purposes=" + purposes +
                 '}';
     }
 }

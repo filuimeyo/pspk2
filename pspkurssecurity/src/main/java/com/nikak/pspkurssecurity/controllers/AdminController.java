@@ -1,9 +1,12 @@
 package com.nikak.pspkurssecurity.controllers;
 
+import com.nikak.pspkurssecurity.dto.PurposeUpdateRequest;
 import com.nikak.pspkurssecurity.dto.ResponseMessage;
 import com.nikak.pspkurssecurity.dto.SubjectRequest;
+import com.nikak.pspkurssecurity.entities.Purpose;
 import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.repositories.SubjectRepository;
+import com.nikak.pspkurssecurity.services.PurposeService;
 import com.nikak.pspkurssecurity.services.SubjectService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class AdminController {
     private final SubjectService subjectService;
+    private final PurposeService purposeService;
 
     @GetMapping
     public ResponseEntity<String> helloAdmin(){
@@ -80,6 +84,45 @@ public class AdminController {
         } catch (Exception e) {
             message = "Could not update subject name!";
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+        }
+    }
+
+    @PostMapping("/purpose")
+    public ResponseEntity<String> addPurpose(
+            @RequestBody PurposeUpdateRequest request
+    ) {
+        String message = "";
+        try {
+            Purpose p =  purposeService.addPurpose(request.getPurpose());
+            return ResponseEntity.status(HttpStatus.OK).body("purpose: "+ p.getPurpose() + " added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/purpose")
+    public ResponseEntity<String> updatePurpose(
+            @RequestBody PurposeUpdateRequest request
+    ){
+        String message = "";
+        try {
+            Purpose p =  purposeService.updatePurpose(request.getId(), request.getPurpose());
+            return ResponseEntity.status(HttpStatus.OK).body("purpose: "+ p.getPurpose() + " updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/purpose")
+    public ResponseEntity<String> addPurpose(
+            @RequestBody Long id
+    ) {
+
+        try {
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(purposeService.deletePurpose(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
 }
