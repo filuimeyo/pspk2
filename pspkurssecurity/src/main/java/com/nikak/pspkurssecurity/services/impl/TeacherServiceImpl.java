@@ -1,6 +1,8 @@
 package com.nikak.pspkurssecurity.services.impl;
 
+import com.nikak.pspkurssecurity.dto.SubjectApplicationFeedbackReq;
 import com.nikak.pspkurssecurity.dto.SubjectRequest;
+import com.nikak.pspkurssecurity.dto.TeacherApplicationFeedbackRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.*;
 import com.nikak.pspkurssecurity.repositories.*;
@@ -30,7 +32,9 @@ public class TeacherServiceImpl implements TeacherService {
     private final SubjectRepository subjectRepository;
     private final CertificateRepository certificateRepository;
     private final PurposeRepository purposeRepository;
-
+    private final TeacherApplicationFeedbackRepository feedbackRepository;
+    private final SubjectApplicationRepository subjectApplicationRepository;
+    private final SubjectApplicationFeedbackRepository subjectFeedbackRepository;
 
     public String updateTeacherImage(String email, MultipartFile file) throws IOException {
         User user = userRepository.findByEmail(email)
@@ -143,7 +147,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     }
 
-    public List<TeacherApplication> getTeacherApplications(String email){
+    public List<TeacherApplication> getTeacherApplications(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         Teacher teacher = teacherRepository.findByUserId(user.getId())
@@ -151,15 +155,15 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherApplicationRepository.findByTeacherId(teacher.getId());
     }
 
-    public  String assignSubjects(Set<Long> subjectIds, String email){
+    public String assignSubjects(Set<Long> subjectIds, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         Teacher teacher = teacherRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
-        Set<Subject> newset =  teacher.getTeacherSubjects();
-        for(Long id: subjectIds){
+        Set<Subject> newset = teacher.getTeacherSubjects();
+        for (Long id : subjectIds) {
             Subject subject = subjectRepository.findById(id)
-                    .orElseThrow(()->new IllegalStateException("no subject with id "+ id));
+                    .orElseThrow(() -> new IllegalStateException("no subject with id " + id));
             newset.add(subject);
         }
         teacher.setTeacherSubjects(newset);
@@ -167,15 +171,15 @@ public class TeacherServiceImpl implements TeacherService {
         return "subject list updated successfully";
     }
 
-    public String removeSubjects(Set<Long> subjectIds, String email){
+    public String removeSubjects(Set<Long> subjectIds, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         Teacher teacher = teacherRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
-        Set<Subject> newset =  teacher.getTeacherSubjects();
-        for(Long id: subjectIds){
+        Set<Subject> newset = teacher.getTeacherSubjects();
+        for (Long id : subjectIds) {
             Subject subject = subjectRepository.findById(id)
-                    .orElseThrow(()->new IllegalStateException("no subject with id "+ id));
+                    .orElseThrow(() -> new IllegalStateException("no subject with id " + id));
             newset.remove(subject);
         }
         teacher.setTeacherSubjects(newset);
@@ -183,7 +187,7 @@ public class TeacherServiceImpl implements TeacherService {
         return "subjects deleted from list  successfully";
     }
 
-    public  String addCertificate(String email, MultipartFile file) throws IOException {
+    public String addCertificate(String email, MultipartFile file) throws IOException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         Teacher teacher = teacherRepository.findByUserId(user.getId())
@@ -217,7 +221,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     }
 
-    public  byte[] getCertificateImage(String filename) throws IOException {
+    public byte[] getCertificateImage(String filename) throws IOException {
         Optional<Certificate> im = certificateRepository.findCertificateByFileName(filename);
 
         return Files.readAllBytes(
@@ -225,15 +229,15 @@ public class TeacherServiceImpl implements TeacherService {
 
     }
 
-    public  String assignPurposes(Set<Long> purposesIds, String email){
+    public String assignPurposes(Set<Long> purposesIds, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         Teacher teacher = teacherRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
-        Set<Purpose> newset =  teacher.getPurposes();
-        for(Long id: purposesIds){
+        Set<Purpose> newset = teacher.getPurposes();
+        for (Long id : purposesIds) {
             Purpose purpose = purposeRepository.findById(id)
-                    .orElseThrow(()->new IllegalStateException("no purpose with id "+ id));
+                    .orElseThrow(() -> new IllegalStateException("no purpose with id " + id));
             newset.add(purpose);
         }
         teacher.setPurposes(newset);
@@ -241,19 +245,76 @@ public class TeacherServiceImpl implements TeacherService {
         return "purpose list updated successfully";
     }
 
-    public  String removePurposes(Set<Long> purposesIds, String email){
+    public String removePurposes(Set<Long> purposesIds, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         Teacher teacher = teacherRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
-        Set<Purpose> newset =  teacher.getPurposes();
-        for(Long id: purposesIds){
-           Purpose purpose = purposeRepository.findById(id)
-                    .orElseThrow(()->new IllegalStateException("no purpose with id "+ id));
+        Set<Purpose> newset = teacher.getPurposes();
+        for (Long id : purposesIds) {
+            Purpose purpose = purposeRepository.findById(id)
+                    .orElseThrow(() -> new IllegalStateException("no purpose with id " + id));
             newset.remove(purpose);
         }
         teacher.setPurposes(newset);
         teacherRepository.save(teacher);
         return "subjects deleted from list  successfully";
+    }
+
+
+    public String addTeacherApplicationFeedback(TeacherApplicationFeedbackRequest request, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("no such user"));
+        Teacher teacher = teacherRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
+
+        TeacherApplication existingApplication = teacherApplicationRepository.findById(request.getApplicationId())
+                .orElseThrow(() -> new IllegalStateException("no teacher applications with id " + request.getApplicationId()));
+
+        Optional<TeacherApplicationFeedback> existingFeedback = feedbackRepository.findByApplicationId(request.getApplicationId());
+        if (existingFeedback.isPresent()) {
+            throw new IllegalStateException("feedback on this application already exist");
+        }
+        TeacherApplicationFeedback feedback = new TeacherApplicationFeedback();
+        if (request.getType().equals(FeedbackType.OK)) {
+            feedback.setFeedbackType(FeedbackType.OK);
+            feedback.setApplication(existingApplication);
+            feedback.setEmail(email);
+        } else {
+            feedback.setApplication(existingApplication);
+            feedback.setFeedbackType(FeedbackType.REFUSED);
+        }
+        feedbackRepository.save(feedback);
+
+        return "added feedback successfully";
+
+    }
+
+
+    public String addSubjectApplicationFeedback(SubjectApplicationFeedbackReq request, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("no such user"));
+        Teacher teacher = teacherRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
+
+        SubjectApplication subjectApplication = subjectApplicationRepository.findById(request.getSubjectApplicationId())
+                .orElseThrow(() -> new IllegalStateException("no subject application found with id " + request.getSubjectApplicationId()));
+
+        Optional<SubjectApplicationFeedback> existing = subjectFeedbackRepository
+                .findByApplicationIdAndTeacherId(
+                        request.getSubjectApplicationId(),
+                        teacher.getId()
+                );
+        if (existing.isPresent()) {
+            throw new IllegalStateException("feedback already exists");
+        }
+
+        SubjectApplicationFeedback subjectApplicationFeedback = new SubjectApplicationFeedback();
+        subjectApplicationFeedback.setTeacher(teacher);
+        subjectApplicationFeedback.setSubjectApplication(subjectApplication);
+        subjectApplicationFeedback.setEmail(email);
+
+        subjectFeedbackRepository.save(subjectApplicationFeedback);
+        return "successfully added feedback on subject application";
     }
 }

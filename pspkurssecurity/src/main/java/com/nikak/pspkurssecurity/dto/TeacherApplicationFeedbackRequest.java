@@ -4,7 +4,8 @@ import com.nikak.pspkurssecurity.entities.FeedbackType;
 import lombok.Data;
 
 @Data
-public class TeacherApplyFeedbackRequest {
+public class TeacherApplicationFeedbackRequest {
     private Long applicationId;
-    private FeedbackType feedbackType;
+
+    private FeedbackType type;
 }

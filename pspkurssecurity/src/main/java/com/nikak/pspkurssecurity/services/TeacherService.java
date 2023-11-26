@@ -1,6 +1,8 @@
 package com.nikak.pspkurssecurity.services;
 
+import com.nikak.pspkurssecurity.dto.SubjectApplicationFeedbackReq;
 import com.nikak.pspkurssecurity.dto.SubjectRequest;
+import com.nikak.pspkurssecurity.dto.TeacherApplicationFeedbackRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.entities.Teacher;
@@ -42,4 +44,8 @@ public interface TeacherService {
     String assignPurposes(Set<Long> purposesIds, String email);
 
     String removePurposes(Set<Long> purposesIds, String email);
+
+    String addTeacherApplicationFeedback(TeacherApplicationFeedbackRequest request, String email);
+
+    String addSubjectApplicationFeedback(SubjectApplicationFeedbackReq request, String email);
 }

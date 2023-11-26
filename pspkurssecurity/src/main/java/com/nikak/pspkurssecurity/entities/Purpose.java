@@ -26,6 +26,10 @@ public class Purpose {
     @JsonBackReference
     private Set<Teacher> teachers = new HashSet<>();
 
+    @OneToMany(mappedBy="purpose")
+    @JsonBackReference
+    private Set<SubjectApplication> subjectApplications;
+
     public Purpose() {
     }
 
@@ -37,6 +41,13 @@ public class Purpose {
         this.id = id;
         this.purpose = purpose;
         this.teachers = teachers;
+    }
+
+    public Purpose(Long id, String purpose, Set<Teacher> teachers, Set<SubjectApplication> subjectApplications) {
+        this.id = id;
+        this.purpose = purpose;
+        this.teachers = teachers;
+        this.subjectApplications = subjectApplications;
     }
 
     public Long getId() {

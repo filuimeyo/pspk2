@@ -1,5 +1,6 @@
 package com.nikak.pspkurssecurity.services;
 
+import com.nikak.pspkurssecurity.dto.ApplyForSubjectRequest;
 import com.nikak.pspkurssecurity.dto.ApplyForTeacherRequest;
 import com.nikak.pspkurssecurity.dto.RatingRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
@@ -17,4 +18,6 @@ public interface StudentService {
     String applyForTeacher(ApplyForTeacherRequest request, String email);
 
     List<TeacherApplication> getTeacherApplications(String email);
+
+    String applyForSubject(ApplyForSubjectRequest applyForSubjectRequest, String email);
 }

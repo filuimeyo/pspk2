@@ -67,22 +67,14 @@ public class Teacher {
     @JsonManagedReference
     private Set<Purpose> purposes = new HashSet<>();
 
+    @OneToMany(mappedBy="teacher")
+    @JsonBackReference
+    private Set<SubjectApplicationFeedback> feedbacks;
+
     public Teacher() {
     }
 
-    public Teacher(String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects) {
-        this.name = name;
-        this.info = info;
-        this.lessonPrice = lessonPrice;
-        this.filename = filename;
-        this.teacherRating = teacherRating;
-        this.teacherApplications = teacherApplications;
-        this.finalRating = finalRating;
-        this.user = user;
-        this.teacherSubjects = teacherSubjects;
-    }
-
-    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects, Set<Certificate> certificates) {
+    public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects, Set<Certificate> certificates, Set<Purpose> purposes, Set<SubjectApplicationFeedback> feedbacks) {
         this.id = id;
         this.name = name;
         this.info = info;
@@ -94,6 +86,8 @@ public class Teacher {
         this.user = user;
         this.teacherSubjects = teacherSubjects;
         this.certificates = certificates;
+        this.purposes = purposes;
+        this.feedbacks = feedbacks;
     }
 
     public Teacher(Long id, String name, String info, double lessonPrice, String filename, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Double finalRating, User user, Set<Subject> teacherSubjects, Set<Certificate> certificates, Set<Purpose> purposes) {
@@ -213,6 +207,14 @@ public class Teacher {
 
     public void setPurposes(Set<Purpose> purposes) {
         this.purposes = purposes;
+    }
+
+    public Set<SubjectApplicationFeedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(Set<SubjectApplicationFeedback> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 
     @Override

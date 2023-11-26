@@ -26,6 +26,10 @@ public class Subject {
     @JsonBackReference
     private Set<TeacherApplication> teacherApplications;
 
+    @OneToMany(mappedBy="subject")
+    @JsonBackReference
+    private Set<SubjectApplication> subjectApplications;
+
     public Subject() {
     }
 
@@ -34,6 +38,15 @@ public class Subject {
         this.name = name;
         this.filename = filename;
         this.teacherApplications = teacherApplications;
+    }
+
+    public Subject(Long id, String name, String filename, List<Teacher> teachers, Set<TeacherApplication> teacherApplications, Set<SubjectApplication> subjectApplications) {
+        this.id = id;
+        this.name = name;
+        this.filename = filename;
+        this.teachers = teachers;
+        this.teacherApplications = teacherApplications;
+        this.subjectApplications = subjectApplications;
     }
 
     public Long getId() {
@@ -74,6 +87,14 @@ public class Subject {
 
     public void setTeacherApplications(Set<TeacherApplication> teacherApplications) {
         this.teacherApplications = teacherApplications;
+    }
+
+    public Set<SubjectApplication> getSubjectApplications() {
+        return subjectApplications;
+    }
+
+    public void setSubjectApplications(Set<SubjectApplication> subjectApplications) {
+        this.subjectApplications = subjectApplications;
     }
 
     @Override

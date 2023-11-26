@@ -27,6 +27,10 @@ public class Student {
     @JsonBackReference
     private Set<TeacherApplication> teacherApplications;
 
+    @OneToMany(mappedBy="student")
+    @JsonBackReference
+    private Set<SubjectApplication> subjectApplications;
+
     public Student() {
     }
 
@@ -36,6 +40,15 @@ public class Student {
         this.name = name;
         this.user = user;
         this.teacherRating = teacherRating;
+    }
+
+    public Student(Long id, String name, User user, Set<Rating> teacherRating, Set<TeacherApplication> teacherApplications, Set<SubjectApplication> subjectApplications) {
+        this.id = id;
+        this.name = name;
+        this.user = user;
+        this.teacherRating = teacherRating;
+        this.teacherApplications = teacherApplications;
+        this.subjectApplications = subjectApplications;
     }
 
     public Set<TeacherApplication> getTeacherApplications() {
@@ -76,5 +89,13 @@ public class Student {
 
     public void setTeacherRating(Set<Rating> teacherRating) {
         this.teacherRating = teacherRating;
+    }
+
+    public Set<SubjectApplication> getSubjectApplications() {
+        return subjectApplications;
+    }
+
+    public void setSubjectApplications(Set<SubjectApplication> subjectApplications) {
+        this.subjectApplications = subjectApplications;
     }
 }

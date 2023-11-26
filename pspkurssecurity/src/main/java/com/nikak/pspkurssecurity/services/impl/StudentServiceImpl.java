@@ -1,8 +1,8 @@
 package com.nikak.pspkurssecurity.services.impl;
 
+import com.nikak.pspkurssecurity.dto.ApplyForSubjectRequest;
 import com.nikak.pspkurssecurity.dto.ApplyForTeacherRequest;
 import com.nikak.pspkurssecurity.dto.RatingRequest;
-import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.*;
 import com.nikak.pspkurssecurity.repositories.*;
 import com.nikak.pspkurssecurity.services.StudentService;
@@ -22,6 +22,8 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
     private final TeacherApplicationRepository teacherApplicationRepository;
+    private final PurposeRepository purposeRepository;
+    private final SubjectApplicationRepository subjectApplicationRepository;
 
     public String addRating(RatingRequest ratingRequest, String email){
         User user = userRepository.findByEmail(email)
@@ -107,5 +109,29 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(() -> new IllegalStateException("no such student with userid " + user.getId()));
 
         return teacherApplicationRepository.findByStudentId(student.getId());
+    }
+
+    public  String applyForSubject(ApplyForSubjectRequest applyForSubjectRequest, String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("no such user"));
+
+        Student student = studentRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new IllegalStateException("no such student with userid " + user.getId()));
+        Subject subject = subjectRepository.findById(applyForSubjectRequest.getSubjectId())
+                .orElseThrow(() -> new IllegalStateException("no such subject with id " + applyForSubjectRequest.getSubjectId()));
+
+        SubjectApplication subjectApplication = new SubjectApplication();
+        subjectApplication.setStudent(student);
+        subjectApplication.setSubject(subject);
+        subjectApplication.setApplicationDate(new Date());
+
+        if(applyForSubjectRequest.getPurposeId() != null){
+            Purpose purpose = purposeRepository.findById(applyForSubjectRequest.getPurposeId())
+                    .orElseThrow(()-> new IllegalStateException("no purpose found with id: " + applyForSubjectRequest.getPurposeId()));
+            subjectApplication.setPurpose(purpose);
+        }
+
+        subjectApplicationRepository.save(subjectApplication);
+        return "successfully added application on subject "+ subject.getName();
     }
 }

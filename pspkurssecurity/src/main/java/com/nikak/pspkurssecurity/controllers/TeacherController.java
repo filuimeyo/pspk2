@@ -1,9 +1,6 @@
 package com.nikak.pspkurssecurity.controllers;
 
-import com.nikak.pspkurssecurity.dto.ResponseMessage;
-import com.nikak.pspkurssecurity.dto.SignUpRequest;
-import com.nikak.pspkurssecurity.dto.SubjectRequest;
-import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
+import com.nikak.pspkurssecurity.dto.*;
 import com.nikak.pspkurssecurity.entities.Teacher;
 import com.nikak.pspkurssecurity.entities.TeacherApplication;
 import com.nikak.pspkurssecurity.services.JWTService;
@@ -28,8 +25,6 @@ public class TeacherController {
 
     private final JWTService jwtService;
     private final TeacherService teacherService;
-
-
 
     @PutMapping("/pic")
     public ResponseEntity<ResponseMessage> updateTeacherPic(
@@ -186,6 +181,35 @@ public class TeacherController {
     }
 
 
+    @PostMapping("/teacherapplicationfeedback")
+    public ResponseEntity<String> addTeacherApplicationFeedback(
+            @RequestBody TeacherApplicationFeedbackRequest request,
+            @RequestHeader("Authorization") String bearerToken
+    ){
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        try{
+            String message = teacherService.addTeacherApplicationFeedback(request, email);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/subjectapplicationfeedback")
+    public ResponseEntity<String> addTeacherApplicationFeedback(
+            @RequestBody SubjectApplicationFeedbackReq request,
+            @RequestHeader("Authorization") String bearerToken
+    ){
+        String email = jwtService.extractUserName(bearerToken.substring(7));
+        try{
+            String message = teacherService.addSubjectApplicationFeedback(request, email);
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
 }
 

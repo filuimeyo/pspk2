@@ -1,5 +1,6 @@
 package com.nikak.pspkurssecurity.controllers;
 
+import com.nikak.pspkurssecurity.dto.ApplyForSubjectRequest;
 import com.nikak.pspkurssecurity.dto.ApplyForTeacherRequest;
 import com.nikak.pspkurssecurity.dto.RatingRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
@@ -104,6 +105,24 @@ public class StudentController {
             String email = jwtService.extractUserName(bearerToken.substring(7));
             return ResponseEntity.status(HttpStatus.OK).body(
                     studentService.applyForTeacher(applyForTeacherRequest, email)
+            );
+
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    e.getMessage()
+            );
+        }
+    }
+
+    @PostMapping("/applyforsubject")
+    public ResponseEntity<String> applyForSubject(
+            @RequestHeader("Authorization") String bearerToken,
+            @RequestBody ApplyForSubjectRequest applyForSubjectRequest
+    ) {
+        try {
+            String email = jwtService.extractUserName(bearerToken.substring(7));
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    studentService.applyForSubject(applyForSubjectRequest, email)
             );
 
         } catch (IllegalStateException e) {
