@@ -5,6 +5,7 @@ import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.repositories.SubjectRepository;
 import com.nikak.pspkurssecurity.services.SubjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,6 +106,10 @@ public class SubjectServiceImpl implements SubjectService {
     public List<Object[]> findSubjectsWithCounts(String name){
         if (name == null) name = "";
         return subjectRepository.findSubjectsWithCounts(name);
+    }
+
+    public List<Subject> getMostPopularSubjects(PageRequest pageRequest){
+        return subjectRepository.findMostPopularSubjects(pageRequest);
     }
 
     public byte[] getSubjectImage(String filename) throws IOException {

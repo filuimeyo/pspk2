@@ -1,25 +1,23 @@
 package com.nikak.pspkurssecurity.services;
 
 import com.nikak.pspkurssecurity.dto.SubjectApplicationFeedbackReq;
-import com.nikak.pspkurssecurity.dto.SubjectRequest;
 import com.nikak.pspkurssecurity.dto.TeacherApplicationFeedbackRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
-import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.entities.Teacher;
 import com.nikak.pspkurssecurity.entities.TeacherApplication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public interface TeacherService {
     /* Teacher uploadPic(MultipartFile file, String email) throws IOException;
 
 
      Teacher getTeacherById(Long id);*/
-    List<Teacher> findTeachersBySubjectId(Long subjectId);
+    List<Teacher> findTeachersBySubjectId(Long subjectId, Long purposeId, Long sort, boolean order);
 
     byte[] getTeacherImage(String filename) throws IOException;
 
@@ -48,4 +46,6 @@ public interface TeacherService {
     String addTeacherApplicationFeedback(TeacherApplicationFeedbackRequest request, String email);
 
     String addSubjectApplicationFeedback(SubjectApplicationFeedbackReq request, String email);
+
+    Optional<Teacher> findById(Long teacherId);
 }

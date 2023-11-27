@@ -2,6 +2,7 @@ package com.nikak.pspkurssecurity.services;
 
 import com.nikak.pspkurssecurity.dto.SubjectRequest;
 import com.nikak.pspkurssecurity.entities.Subject;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,4 +22,6 @@ public interface SubjectService {
 
     List<Object[]> findSubjectsWithCounts(String name);
     byte[] getSubjectImage(String filename) throws IOException;
+
+    List<Subject> getMostPopularSubjects(PageRequest pageRequest);
 }

@@ -26,12 +26,15 @@ public class AuthenticationController {
                 .body(authenticationService.signup(signUpRequest));
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(
             @RequestBody SigninRequest signinRequest
     ){
+        System.out.println(signinRequest);
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                //.header("Access-Control-Allow-Origin", "*")
+                //.header("Access-Control-Allow-Methods", "POST", "GET")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(authenticationService.signin(signinRequest));
     }

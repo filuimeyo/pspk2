@@ -1,7 +1,6 @@
 package com.nikak.pspkurssecurity.services.impl;
 
 import com.nikak.pspkurssecurity.dto.SubjectApplicationFeedbackReq;
-import com.nikak.pspkurssecurity.dto.SubjectRequest;
 import com.nikak.pspkurssecurity.dto.TeacherApplicationFeedbackRequest;
 import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
 import com.nikak.pspkurssecurity.entities.*;
@@ -10,7 +9,6 @@ import com.nikak.pspkurssecurity.services.TeacherService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -19,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -135,8 +132,41 @@ public class TeacherServiceImpl implements TeacherService {
     }*/
 
 
-    public List<Teacher> findTeachersBySubjectId(Long subjectId) {
-        return teacherRepository.findBySubjectId(subjectId);
+    public List<Teacher> findTeachersBySubjectId(Long subjectId, Long purposeId, Long sort, boolean order) {
+        Comparator<Teacher> finalRatingComp1 = Comparator.comparingDouble(Teacher::getFinalRating);
+        Comparator<Teacher> finalRatingComp2 = (o1, o2) -> Double.compare(o2.getFinalRating(), o1.getFinalRating());
+
+        if(purposeId==-1){
+            if(sort == 1){
+                return order? teacherRepository.findBySubjectIdSortByLessonPriceDesc(subjectId)
+                        : teacherRepository.findBySubjectIdSortByLessonPriceAsc(subjectId);
+            }else if(sort == 2){
+
+                List<Teacher> list = teacherRepository.findBySubjectId(subjectId);
+                if (order) {
+                    list.sort(finalRatingComp2);
+                } else {
+                    list.sort(finalRatingComp1);
+                }
+                return list;
+
+            } else throw new IllegalStateException("no such sort type");
+        } else {
+            if(sort == 1){
+                return order? teacherRepository.findBySubjectIdAndPurposeIdSortByPriceDesc(subjectId, purposeId)
+                        : teacherRepository.findBySubjectIdAndPurposeIdSortByPriceAsc(subjectId, purposeId);
+            }else if(sort == 2){
+                List<Teacher> list = teacherRepository.findBySubjectIdAndPurposeId(subjectId, purposeId);
+                 if (order) {
+                    list.sort(finalRatingComp2);
+                } else {
+                    list.sort(finalRatingComp1);
+                }
+                return list;
+
+            } else throw new IllegalStateException("no such sort type");
+        }
+
     }
 
     public byte[] getTeacherImage(String filename) throws IOException {
@@ -316,5 +346,9 @@ public class TeacherServiceImpl implements TeacherService {
 
         subjectFeedbackRepository.save(subjectApplicationFeedback);
         return "successfully added feedback on subject application";
+    }
+
+    public Optional<Teacher> findById(Long teacherId){
+        return teacherRepository.findById(teacherId);
     }
 }

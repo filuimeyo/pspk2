@@ -1,10 +1,12 @@
-package com.nikak.pspkurssecurity.repositories;
+package com.nikak.pspkurssecurity.services.impl;
 
 import com.nikak.pspkurssecurity.entities.Purpose;
+import com.nikak.pspkurssecurity.repositories.PurposeRepository;
 import com.nikak.pspkurssecurity.services.PurposeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +39,9 @@ public class PurposeServiceImpl implements PurposeService {
                 .orElseThrow(() -> new IllegalStateException("purpose with id: " + id + " does not exist"));
         purposeRepository.deleteById(id);
         return "purpose: "+ existingPurpose.getPurpose() + " deleted successfully";
+    }
+
+    public List<Purpose> findAll(){
+        return purposeRepository.findAll();
     }
 }

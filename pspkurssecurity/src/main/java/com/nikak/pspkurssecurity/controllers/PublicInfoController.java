@@ -1,10 +1,13 @@
 package com.nikak.pspkurssecurity.controllers;
 
 
+import com.nikak.pspkurssecurity.entities.Purpose;
 import com.nikak.pspkurssecurity.entities.Teacher;
+import com.nikak.pspkurssecurity.services.PurposeService;
 import com.nikak.pspkurssecurity.services.SubjectService;
 import com.nikak.pspkurssecurity.services.TeacherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/public/info")
@@ -20,6 +24,7 @@ public class PublicInfoController {
 
     private final SubjectService subjectService;
     private final TeacherService teacherService;
+    private final PurposeService purposeService;
 
 
     /*@GetMapping("/subject/files")
@@ -42,6 +47,15 @@ public class PublicInfoController {
 
         return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*").body(files);
     }*/
+
+    @GetMapping("/popular")
+    public ResponseEntity<?> getListPopularSubjects() {
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(subjectService.getMostPopularSubjects(PageRequest.of(0, 6)));
+    }
 
     @GetMapping("/subjects")
     public ResponseEntity<?> getListSubjects(
@@ -79,13 +93,26 @@ public class PublicInfoController {
 
     @GetMapping("/teachers/{subjectId}")
     public ResponseEntity<List<Teacher>> getListSubjects(
-            @PathVariable Long subjectId
+            @PathVariable Long subjectId,
+            @RequestParam Long sort,
+            @RequestParam boolean order,
+            @RequestParam Long purposeId
     ) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .header("Access-Control-Allow-Origin", "*")
-                .body(teacherService.findTeachersBySubjectId(subjectId));
+                .body(teacherService.findTeachersBySubjectId(subjectId, purposeId, sort, order));
+    }
+
+    @GetMapping("/teachers/one/{teacherId}")
+    public ResponseEntity<Optional<Teacher>> getTeacherById(
+            @PathVariable Long teacherId
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(teacherService.findById(teacherId));
     }
 
     @GetMapping("/teachers/pic/{filename}")
@@ -110,6 +137,14 @@ public class PublicInfoController {
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(im);
+    }
+
+    @GetMapping("/purposes")
+    public ResponseEntity<List<Purpose>> getPurposes(
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(purposeService.findAll());
     }
 
     /*@GetMapping("teachers/{subjectId}")
