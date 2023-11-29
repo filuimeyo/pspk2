@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-public class SubjectApplication {
+public class SubjectApplication extends Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +32,7 @@ public class SubjectApplication {
     private Date applicationDate;
 
 
-    @OneToMany(mappedBy="subjectApplication")
+    @OneToMany(mappedBy= "application")
     @JsonBackReference
     private Set<SubjectApplicationFeedback> feedbacks;
 
@@ -88,9 +88,7 @@ public class SubjectApplication {
         this.purpose = purpose;
     }
 
-    public Date getApplicationDate() {
-        return applicationDate;
-    }
+
 
     public void setApplicationDate(Date applicationDate) {
         this.applicationDate = applicationDate;
@@ -126,5 +124,10 @@ public class SubjectApplication {
                 ", purpose=" + purpose +
                 ", applicationDate=" + applicationDate +
                 '}';
+    }
+
+    @Override
+    public Date getApplicationDate() {
+        return applicationDate;
     }
 }

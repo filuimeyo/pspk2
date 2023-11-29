@@ -134,4 +134,7 @@ public class StudentServiceImpl implements StudentService {
         subjectApplicationRepository.save(subjectApplication);
         return "successfully added application on subject "+ subject.getName();
     }
+
+
+
 }

@@ -310,9 +310,11 @@ public class TeacherServiceImpl implements TeacherService {
             feedback.setFeedbackType(FeedbackType.OK);
             feedback.setApplication(existingApplication);
             feedback.setEmail(email);
+            feedback.setApplicationDate(new Date());
         } else {
             feedback.setApplication(existingApplication);
             feedback.setFeedbackType(FeedbackType.REFUSED);
+            feedback.setApplicationDate(new Date());
         }
         feedbackRepository.save(feedback);
 
@@ -341,8 +343,9 @@ public class TeacherServiceImpl implements TeacherService {
 
         SubjectApplicationFeedback subjectApplicationFeedback = new SubjectApplicationFeedback();
         subjectApplicationFeedback.setTeacher(teacher);
-        subjectApplicationFeedback.setSubjectApplication(subjectApplication);
+        subjectApplicationFeedback.setApplication(subjectApplication);
         subjectApplicationFeedback.setEmail(email);
+        subjectApplicationFeedback.setApplicationDate(new Date());
 
         subjectFeedbackRepository.save(subjectApplicationFeedback);
         return "successfully added feedback on subject application";

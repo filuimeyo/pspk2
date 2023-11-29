@@ -31,6 +31,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
+
+    public Role getRole(String email){
+
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(()->
+                        new IllegalArgumentException("Invalid email or password"));
+        return user.getRole();
+    }
+
     public JwtAuthenticationResponse signup(SignUpRequest signUpRequest){
         if(signUpRequest.getRole().equals(Role.ADMIN))
             throw new IllegalArgumentException("Can't sign up admin");

@@ -10,7 +10,7 @@ import java.util.Date;
 
 
 @Entity
-public class TeacherApplication {
+public class TeacherApplication extends Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -89,9 +89,6 @@ public class TeacherApplication {
         this.subject = subject;
     }
 
-    public Date getApplicationDate() {
-        return applicationDate;
-    }
 
     public void setApplicationDate(Date applicationDate) {
         this.applicationDate = applicationDate;
@@ -103,5 +100,10 @@ public class TeacherApplication {
 
     public void setFeedback(TeacherApplicationFeedback feedback) {
         this.feedback = feedback;
+    }
+
+    @Override
+    public Date getApplicationDate() {
+        return applicationDate;
     }
 }

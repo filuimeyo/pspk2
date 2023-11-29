@@ -2,8 +2,10 @@ package com.nikak.pspkurssecurity.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
+
 @Entity
-public class TeacherApplicationFeedback {
+public class TeacherApplicationFeedback extends Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +17,8 @@ public class TeacherApplicationFeedback {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_id")
     private TeacherApplication application;
+
+    private Date applicationDate;
 
     public TeacherApplicationFeedback() {
     }
@@ -64,5 +68,12 @@ public class TeacherApplicationFeedback {
         this.application = application;
     }
 
+    @Override
+    public Date getApplicationDate() {
+        return applicationDate;
+    }
 
+    public void setApplicationDate(Date applicationDate) {
+        this.applicationDate = applicationDate;
+    }
 }

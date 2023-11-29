@@ -53,7 +53,6 @@ public class PublicInfoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
                 .body(subjectService.getMostPopularSubjects(PageRequest.of(0, 6)));
     }
 
@@ -64,7 +63,6 @@ public class PublicInfoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
                 .body(subjectService.findSubjectsWithCounts(name));
     }
 
@@ -101,7 +99,6 @@ public class PublicInfoController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
                 .body(teacherService.findTeachersBySubjectId(subjectId, purposeId, sort, order));
     }
 
@@ -111,7 +108,6 @@ public class PublicInfoController {
     ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
                 .body(teacherService.findById(teacherId));
     }
 
@@ -143,7 +139,6 @@ public class PublicInfoController {
     public ResponseEntity<List<Purpose>> getPurposes(
     ){
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
                 .body(purposeService.findAll());
     }
 

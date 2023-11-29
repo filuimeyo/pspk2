@@ -1,5 +1,6 @@
 package com.nikak.pspkurssecurity.dto;
 
+import com.nikak.pspkurssecurity.entities.Role;
 import lombok.Data;
 
 @Data

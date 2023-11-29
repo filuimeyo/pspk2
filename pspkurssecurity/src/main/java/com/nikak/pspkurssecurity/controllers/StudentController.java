@@ -1,9 +1,6 @@
 package com.nikak.pspkurssecurity.controllers;
 
-import com.nikak.pspkurssecurity.dto.ApplyForSubjectRequest;
-import com.nikak.pspkurssecurity.dto.ApplyForTeacherRequest;
-import com.nikak.pspkurssecurity.dto.RatingRequest;
-import com.nikak.pspkurssecurity.dto.TeacherProfileRequest;
+import com.nikak.pspkurssecurity.dto.*;
 import com.nikak.pspkurssecurity.entities.Rating;
 import com.nikak.pspkurssecurity.entities.TeacherApplication;
 import com.nikak.pspkurssecurity.services.JWTService;
@@ -19,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/student")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class StudentController {
     private final JWTService jwtService;
     private final StudentService studentService;
@@ -131,4 +129,5 @@ public class StudentController {
             );
         }
     }
+
 }

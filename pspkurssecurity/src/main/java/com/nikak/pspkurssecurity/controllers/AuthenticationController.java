@@ -2,6 +2,7 @@ package com.nikak.pspkurssecurity.controllers;
 
 import com.nikak.pspkurssecurity.dto.*;
 import com.nikak.pspkurssecurity.services.AuthenticationService;
+import com.nikak.pspkurssecurity.services.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,12 +17,14 @@ public class AuthenticationController {
 
     private  final AuthenticationService authenticationService;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
     public ResponseEntity<JwtAuthenticationResponse> signup(
             @RequestBody SignUpRequest signUpRequest
     ){
+        System.out.println(signUpRequest);
       return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+               // .header("Access-Control-Allow-Origin", "*")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(authenticationService.signup(signUpRequest));
     }
@@ -45,10 +48,6 @@ public class AuthenticationController {
             ){
         return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
     }
-
-
-
-
 
 
 }

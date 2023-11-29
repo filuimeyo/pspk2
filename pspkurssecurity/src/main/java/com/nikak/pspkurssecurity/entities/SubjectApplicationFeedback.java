@@ -2,10 +2,11 @@ package com.nikak.pspkurssecurity.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
-public class SubjectApplicationFeedback {
+public class SubjectApplicationFeedback extends Feedback{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,13 +15,14 @@ public class SubjectApplicationFeedback {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "application_id")
-    private SubjectApplication subjectApplication;
+    private SubjectApplication application;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
+    private Date applicationDate;
 
     public SubjectApplicationFeedback() {
     }
@@ -28,7 +30,7 @@ public class SubjectApplicationFeedback {
     public SubjectApplicationFeedback(Long id, String email, SubjectApplication subjectApplication, Teacher teacher) {
         this.id = id;
         this.email = email;
-        this.subjectApplication = subjectApplication;
+        this.application = subjectApplication;
         this.teacher = teacher;
     }
 
@@ -48,12 +50,12 @@ public class SubjectApplicationFeedback {
         this.email = email;
     }
 
-    public SubjectApplication getSubjectApplication() {
-        return subjectApplication;
+    public SubjectApplication getApplication() {
+        return application;
     }
 
-    public void setSubjectApplication(SubjectApplication subjectApplication) {
-        this.subjectApplication = subjectApplication;
+    public void setApplication(SubjectApplication subjectApplication) {
+        this.application = subjectApplication;
     }
 
     public Teacher getTeacher() {
@@ -65,16 +67,25 @@ public class SubjectApplicationFeedback {
     }
 
     @Override
+    public Date getApplicationDate() {
+        return applicationDate;
+    }
+
+    public void setApplicationDate(Date applicationDate) {
+        this.applicationDate = applicationDate;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubjectApplicationFeedback that = (SubjectApplicationFeedback) o;
-        return Objects.equals(id, that.id) && Objects.equals(email, that.email) && Objects.equals(subjectApplication, that.subjectApplication) && Objects.equals(teacher, that.teacher);
+        return Objects.equals(id, that.id) && Objects.equals(email, that.email) && Objects.equals(application, that.application) && Objects.equals(teacher, that.teacher);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, subjectApplication, teacher);
+        return Objects.hash(id, email, application, teacher);
     }
 
     @Override
@@ -82,7 +93,7 @@ public class SubjectApplicationFeedback {
         return "SubjectApplicationFeedback{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", subjectApplication=" + subjectApplication +
+                ", subjectApplication=" + application +
                 ", teacher=" + teacher +
                 '}';
     }
