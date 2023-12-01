@@ -101,6 +101,7 @@ public class StudentController {
     ) {
         try {
             String email = jwtService.extractUserName(bearerToken.substring(7));
+            System.out.println(email);
             return ResponseEntity.status(HttpStatus.OK).body(
                     studentService.applyForTeacher(applyForTeacherRequest, email)
             );
