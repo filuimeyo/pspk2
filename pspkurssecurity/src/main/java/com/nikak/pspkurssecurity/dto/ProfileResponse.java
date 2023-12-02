@@ -9,5 +9,10 @@ import java.util.List;
 public class ProfileResponse {
     private List<Application> applications;
     private List<Feedback> feedbacks;
+    private User user;
+    private Teacher teacher;
     private Role role;
+
+
+    private List<Application> subjectApplications;
 }

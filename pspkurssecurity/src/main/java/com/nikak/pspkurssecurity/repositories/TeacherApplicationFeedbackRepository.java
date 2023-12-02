@@ -14,4 +14,7 @@ public interface TeacherApplicationFeedbackRepository extends JpaRepository<Teac
 
     @Query("select t from TeacherApplicationFeedback t where t.application.student.id = ?1")
     List<TeacherApplicationFeedback> findByStudentId(Long studentId);
+
+    @Query("select t from TeacherApplicationFeedback t where t.application.teacher.id = ?1")
+    List<TeacherApplicationFeedback> findByTeacherId(Long teacherId);
 }

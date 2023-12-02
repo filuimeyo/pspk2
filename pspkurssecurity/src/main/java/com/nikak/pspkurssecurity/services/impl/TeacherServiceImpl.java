@@ -326,8 +326,8 @@ public class TeacherServiceImpl implements TeacherService {
     public String addSubjectApplicationFeedback(SubjectApplicationFeedbackReq request, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
-        Teacher teacher = teacherRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
+            Teacher teacher = teacherRepository.findByUserId(user.getId())
+                    .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
 
         SubjectApplication subjectApplication = subjectApplicationRepository.findById(request.getSubjectApplicationId())
                 .orElseThrow(() -> new IllegalStateException("no subject application found with id " + request.getSubjectApplicationId()));

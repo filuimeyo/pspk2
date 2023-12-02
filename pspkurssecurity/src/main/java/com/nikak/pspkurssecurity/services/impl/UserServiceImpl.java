@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final SubjectApplicationRepository subjectApplicationRepository;
     private final TeacherApplicationFeedbackRepository teacherApplicationFeedbackRepository;
     private final SubjectApplicationFeedbackRepository subjectApplicationFeedbackRepository;
+    private final TeacherRepository teacherRepository;
 
 
     @Override
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalStateException("no such user"));
         profileResponse.setRole(user.getRole());
+        profileResponse.setUser(user);
         switch (user.getRole()){
             case ADMIN -> {
                 List<Application> applications = new ArrayList<>();
@@ -91,6 +93,31 @@ public class UserServiceImpl implements UserService {
                 break;
             }
             case TEACHER -> {
+                Teacher teacher = teacherRepository.findByUserId(user.getId())
+                        .orElseThrow(() -> new IllegalStateException("no such teacher with userid " + user.getId()));
+
+                List<Application> applications =
+                        new ArrayList<>(teacherApplicationRepository.findByTeacherId(teacher.getId()));
+                applications.sort(comp);
+                profileResponse.setApplications(applications);
+
+
+                List<Feedback> feedbacks = new ArrayList<>();
+                feedbacks.addAll(
+                        teacherApplicationFeedbackRepository.findByTeacherId(teacher.getId())
+                );
+                feedbacks.addAll(
+                        subjectApplicationFeedbackRepository.findByTeacherId(teacher.getId())
+                );
+                feedbacks.sort(comp2);
+                profileResponse.setFeedbacks(feedbacks);
+
+
+                List<Application> subjectApplications =
+                        new ArrayList<>(subjectApplicationRepository.findAll());
+                subjectApplications.sort(comp);
+                profileResponse.setSubjectApplications(subjectApplications);
+
                 break;
             }
         }

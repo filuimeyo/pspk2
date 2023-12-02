@@ -188,10 +188,13 @@ public class TeacherController {
     ){
         String email = jwtService.extractUserName(bearerToken.substring(7));
         try{
+
             String message = teacherService.addTeacherApplicationFeedback(request, email);
+            System.out.println(message);
             return ResponseEntity.status(HttpStatus.OK).body(message);
         }
         catch(Exception e){
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

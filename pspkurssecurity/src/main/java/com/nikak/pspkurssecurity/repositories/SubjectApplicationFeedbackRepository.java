@@ -14,4 +14,7 @@ public interface SubjectApplicationFeedbackRepository extends JpaRepository<Subj
 
     @Query("select s from SubjectApplicationFeedback  s where s.application.student.id = ?1")
     List<SubjectApplicationFeedback> findByStudentId(Long studentId);
+
+    @Query("select s from SubjectApplicationFeedback  s where s.teacher.id = ?1")
+    List<SubjectApplicationFeedback> findByTeacherId(Long teacherId);
 }
