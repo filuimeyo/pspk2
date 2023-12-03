@@ -97,8 +97,10 @@ public class SubjectServiceImpl implements SubjectService {
                 .orElseThrow(()->
                         new IllegalStateException("subject does not exist")
                 );
-        Path deletePath = Paths.get(FOLDER_PATH + subject.getFilename());
-        Files.delete(deletePath);
+        if(subject.getFilename()!=null){
+            Path deletePath = Paths.get(FOLDER_PATH + subject.getFilename());
+            Files.delete(deletePath);
+        }
         subjectRepository.deleteById(subjectId);
         return "Subject "+ subject.getName()+ " deleted successfully";
     }
@@ -119,6 +121,10 @@ public class SubjectServiceImpl implements SubjectService {
                 new File( FOLDER_PATH + im.get().getFilename()).toPath());
     }
 
+
+    public List<Subject> findAll(){
+        return subjectRepository.findAll();
+    }
 
 
     /*public Subject getSubjectById(Long id){

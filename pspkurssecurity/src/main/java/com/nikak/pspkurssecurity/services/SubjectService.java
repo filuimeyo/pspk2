@@ -24,4 +24,6 @@ public interface SubjectService {
     byte[] getSubjectImage(String filename) throws IOException;
 
     List<Subject> getMostPopularSubjects(PageRequest pageRequest);
+
+    List<Subject> findAll();
 }

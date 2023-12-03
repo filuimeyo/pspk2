@@ -1,9 +1,13 @@
 package com.nikak.pspkurssecurity.controllers;
 
 import com.nikak.pspkurssecurity.dto.*;
+import com.nikak.pspkurssecurity.entities.Purpose;
+import com.nikak.pspkurssecurity.entities.Subject;
 import com.nikak.pspkurssecurity.entities.Teacher;
 import com.nikak.pspkurssecurity.entities.TeacherApplication;
 import com.nikak.pspkurssecurity.services.JWTService;
+import com.nikak.pspkurssecurity.services.PurposeService;
+import com.nikak.pspkurssecurity.services.SubjectService;
 import com.nikak.pspkurssecurity.services.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -25,18 +29,22 @@ public class TeacherController {
 
     private final JWTService jwtService;
     private final TeacherService teacherService;
+    private final SubjectService subjectService;
+    private final PurposeService purposeService;
 
     @PutMapping("/pic")
     public ResponseEntity<ResponseMessage> updateTeacherPic(
             @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestHeader("Authorization") String bearerToken
     ) {
-        String email = jwtService.extractUserName(bearerToken.substring(7));
         String message = "";
         try {
+            String email = jwtService.extractUserName(bearerToken.substring(7));
+
             message = teacherService.updateTeacherImage(email, file);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
         } catch (Exception e) {
+            e.printStackTrace();
             message = "Could not upload the file: " + file.getOriginalFilename() + "!";
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
         }
@@ -53,6 +61,16 @@ public class TeacherController {
         );
     }
 
+    @GetMapping("/subjects")
+    public ResponseEntity<List<Subject>> getAllSubjects(){
+        return ResponseEntity.ok(subjectService.findAll());
+    }
+
+    @GetMapping("/purposes")
+    public ResponseEntity<List<Purpose>> getAllPurposes(){
+        return ResponseEntity.ok(purposeService.findAll());
+    }
+
     @PutMapping("/subjects")
     public ResponseEntity<String> assignSubjectForTeacher(
             @RequestBody Set<Long> subjectIds,
@@ -66,6 +84,8 @@ public class TeacherController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
+
+
 
     @DeleteMapping("/subjects")
     public ResponseEntity<String> deleteSubjectForTeacher(

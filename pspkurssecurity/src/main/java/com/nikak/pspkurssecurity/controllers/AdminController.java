@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/admin")
@@ -48,6 +49,7 @@ public class AdminController {
             @RequestParam(value = "file", required = false) MultipartFile file,
             @PathVariable Long subjectId
     ){
+
         String message = "";
         try {
             message =  subjectService.updateSubjectImage(subjectId,file);
@@ -77,16 +79,24 @@ public class AdminController {
     public ResponseEntity<ResponseMessage> deleteSubject(
             @PathVariable Long subjectId
     ){
+
         String message = "";
         try {
             message =  subjectService.deleteSubject(subjectId);
+            System.out.println(message);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
         } catch (Exception e) {
+            e.printStackTrace();
             message = "Could not update subject name!";
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
         }
     }
 
+
+    @GetMapping("/purpose")
+    public ResponseEntity<List<Purpose>> getPurposes(){
+        return ResponseEntity.ok(purposeService.findAll());
+    }
     @PostMapping("/purpose")
     public ResponseEntity<String> addPurpose(
             @RequestBody PurposeUpdateRequest request
@@ -112,17 +122,27 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
-    @DeleteMapping("/purpose")
-    public ResponseEntity<String> addPurpose(
-            @RequestBody Long id
+    @DeleteMapping("/purpose/{purposeId}")
+    public ResponseEntity<String> deletePurpose(
+            @PathVariable Long purposeId
     ) {
 
         try {
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(purposeService.deletePurpose(id));
+                    .body(purposeService.deletePurpose(purposeId));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
         }
     }
+
+
+    @GetMapping("/subjects")
+    public ResponseEntity<List<Subject>> getAllSubjects(){
+        return ResponseEntity.ok(subjectService.findAll());
+    }
+
+
+
 }

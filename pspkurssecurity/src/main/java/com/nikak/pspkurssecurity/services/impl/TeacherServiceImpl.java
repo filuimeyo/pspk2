@@ -80,19 +80,26 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacherProfileRequest.getLessonPrice() != null) {
             teacher.setLessonPrice(teacherProfileRequest.getLessonPrice());
         }
-       /* if (teacherProfileRequest.getSubjectsIds() != null) {
-            List<Subject> subjects = teacher.getTeacherSubjects();
-            for (Long id : teacherProfileRequest.getSubjectsIds()) {
+        if (teacherProfileRequest.getSubjects() != null) {
 
-                Optional<Subject> subject = subjectRepository.findById(id);
-                if(subject.isPresent()) {
-                    if(!subjects.contains(subject.get())){
-                        subjects.add(subject.get());
-                    }
-                }
+            Set<Subject> newset = new HashSet<>();
+            for (Long id : teacherProfileRequest.getSubjects()) {
+                Subject subject = subjectRepository.findById(id)
+                        .orElseThrow(() -> new IllegalStateException("no subject with id " + id));
+                newset.add(subject);
             }
-            teacher.setTeacherSubjects(subjects);
-        }*/
+            teacher.setTeacherSubjects(newset);
+        }
+        if (teacherProfileRequest.getPurposes() != null) {
+            Set<Purpose> newset = new HashSet<>();
+            for (Long id :teacherProfileRequest.getPurposes() ) {
+                Purpose purpose = purposeRepository.findById(id)
+                        .orElseThrow(() -> new IllegalStateException("no purpose with id " + id));
+                newset.add(purpose);
+            }
+            teacher.setPurposes(newset);
+
+        }
         return teacherRepository.save(teacher);
 
     }
