@@ -1,5 +1,6 @@
 package com.nikak.pspkurssecurity.services.impl;
 
+import com.nikak.pspkurssecurity.dto.ChangePasswordRequest;
 import com.nikak.pspkurssecurity.dto.ProfileResponse;
 import com.nikak.pspkurssecurity.entities.*;
 import com.nikak.pspkurssecurity.repositories.*;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final TeacherApplicationFeedbackRepository teacherApplicationFeedbackRepository;
     private final SubjectApplicationFeedbackRepository subjectApplicationFeedbackRepository;
     private final TeacherRepository teacherRepository;
+
 
 
     @Override
@@ -123,4 +126,6 @@ public class UserServiceImpl implements UserService {
         }
         return profileResponse;
     }
+
+
 }
