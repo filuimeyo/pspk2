@@ -19,14 +19,19 @@ public class AuthenticationController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/signup")
-    public ResponseEntity<JwtAuthenticationResponse> signup(
+    public ResponseEntity<?> signup(
             @RequestBody SignUpRequest signUpRequest
     ){
-        System.out.println(signUpRequest);
-      return ResponseEntity.status(HttpStatus.OK)
-               // .header("Access-Control-Allow-Origin", "*")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(authenticationService.signup(signUpRequest));
+
+        try{
+            return ResponseEntity.status(HttpStatus.OK)
+                    // .header("Access-Control-Allow-Origin", "*")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(authenticationService.signup(signUpRequest));
+        } catch (IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
